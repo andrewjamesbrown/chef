@@ -255,7 +255,10 @@ class Chef
       # true:: if the current node is a docker container
       # false:: if the current node is not a docker container
       def docker?(node)
-        ::File.exist?("/.dockerinit") || ::File.exist?("/.dockerenv")
+        # Using "File.exist?('/.dockerinit') || File.exist?('/.dockerenv')" makes Travis sad,
+        # and that makes us sad too.
+        node[:virtualization] && node[:virtualization][:systems] &&
+          node[:virtualization][:systems][:docker] && node[:virtualization][:systems][:docker] == "guest"
       end
 
     end
